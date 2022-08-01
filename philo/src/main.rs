@@ -6,11 +6,9 @@ pub mod rules;
 
 fn test(nbr: i32, data: Arc<Mutex<i32>>)
 {
-    data.lock().unwrap();
-    for i in 1..10
-    {
-        println!("test {} {} ", nbr, i);
-    }
+    let mut guard = data.lock().unwrap();
+    println!("test {} ", guard);
+    *guard += 1;
 }
 
 fn main() {
@@ -23,7 +21,7 @@ fn main() {
         }
     let data = Arc::new(Mutex::new(0));
     let _stru = rules::init_rules(args);
-    for i in 0..2
+    for i in 0..3
     {
         let data = Arc::clone(&data);
         let handle = thread::spawn(move || test(i,data));
